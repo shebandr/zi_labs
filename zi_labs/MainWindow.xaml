@@ -1,0 +1,47 @@
+﻿<Window x:Class="zi_labs.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:zi_labs"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Label Grid.Row="0" Grid.Column="1" Width="100px">Лабораторная 1</Label>
+        <Label Grid.Row="0" Grid.Column="0" >Входные данные</Label>
+        <Label Grid.Row="0" Grid.Column="2" Width="60px" Margin="180 0 0 0">Вывод</Label>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0">
+            <TextBox Width="100px" x:Name="l11val"></TextBox>
+            <Label> ^</Label>
+            <TextBox Width="100px" x:Name="l11p"></TextBox>
+        </StackPanel>
+        <Button Grid.Row="1" Grid.Column="1" Width="100px" x:Name="l11calc" Click="button_click_l11">Вычислить</Button>
+        <Label Grid.Row="1" Grid.Column="2" Width="100px" x:Name="l11out">тут будет вывод</Label>
+        
+    </Grid>
+</Window>
