@@ -25,14 +25,36 @@ namespace zi_labs
         {
             InitializeComponent();
             Console.WriteLine("Функция быстрого возведения числа в степень по модулю:");
-            Console.WriteLine(lab1.fast_exp(4, 2, 3));
-            Console.WriteLine("обобщённый алгоритм Евклида:");
-            List<ulong> t = lab1.eucl(10, 200);
-            Console.WriteLine(t[0].ToString() + " " + t[1].ToString() + " " + t[2].ToString());
-            Console.WriteLine("Диффи-Хеллман:");
-            lab1.diffie_hellman_algorithm();
-            Console.WriteLine("Шаг младенца Шаг великана");
-            Console.WriteLine(lab1.giant_baby_step(88, 107, 47));
+            Random rnd = new Random();
+            ulong p = lab1.generate_prime(100000000, 1000000000);
+            ulong a = (ulong)rnd.Next(10000, 100000);
+            ulong x = (ulong)rnd.Next(0, (int)p);
+
+            ulong y = lab1.fast_exp(a, x, p);
+            Console.WriteLine("a = " + a + " x = " + x + " p = " + p + "  Ответ: " + y);
+
+            var X = lab1.giant_baby_step(a, p, y);
+            Console.WriteLine(" X = " + X);
+
+            if(X != x)
+            {
+                ulong Y = lab1.fast_exp(a, (ulong)X, p);
+                Console.WriteLine("Новое решение: " + Y);
+            }
+
+            ulong prime1 = lab1.generate_prime(1000000, 1000000000);
+            System.Threading.Thread.Sleep(50);
+            ulong prime2 = lab1.generate_prime(1000000, 1000000000);
+            System.Threading.Thread.Sleep(50);
+            ulong prime3 = lab1.generate_prime(1000000, 1000000000) + 1;
+            System.Threading.Thread.Sleep(50);
+            ulong prime4 = lab1.generate_prime(1000000, 1000000000) + 1;
+            System.Threading.Thread.Sleep(50);
+            List<ulong> primelist1 = lab1.eucl(prime1, prime2);
+            List<ulong> primelist2 = lab1.eucl(prime3, prime4);
+            Console.WriteLine("Евклид:");
+            Console.WriteLine("простые числа: " + primelist1[0]);
+            Console.WriteLine("четные числа: " + primelist2[0]);
         }
 
         private void button_click_l11(object sender, RoutedEventArgs e)

@@ -24,13 +24,13 @@ namespace zi_labs
 
             while (x > 0)
             {
-                if ((x & 1) == 1)  // если крайний правый бит степени равен 1
+                if ((x & 1) == 1)  
                 {
                     result = (result * a) % p;
                 }
 
                 a = (a * a) % p;
-                x >>= 1;  // побитово смещаем степень
+                x >>= 1;  
             }
 
             return result;
@@ -88,7 +88,6 @@ namespace zi_labs
             Random rnd = new Random();
             ulong q = 0;
             ulong p = 0;
-            ulong g = 0;
             ulong Xa = 0;
             ulong Xb = 0;
             ulong Ya = 0;
@@ -108,13 +107,16 @@ namespace zi_labs
                 }
 
             }
+            ulong g = (ulong)rnd.Next(1, (int)p-1);
+
             Console.WriteLine("q = " + q);
             Console.WriteLine("p = " + p);
-            while (fast_exp(g, q, p) != 1)
+            while (fast_exp(g, q, p) == 1)
             {
                 g = (ulong)rnd.Next(1, (int)(p -1));
 
             }
+            Console.WriteLine("g = " + g);
             Xa = (ulong)rnd.Next(1, (int)(p));
             Xb = (ulong)rnd.Next(1, (int)(p));
             Console.WriteLine("Закрытые ключи: ");
@@ -129,9 +131,7 @@ namespace zi_labs
 
             Zab = fast_exp(Yb, Xa, p);
             Zba = fast_exp(Ya, Xb, p);
-            Console.WriteLine("Секретные ключи: ");
-            Console.WriteLine("Zab = " + Zab);
-            Console.WriteLine("Zba = " + Zba);
+
             return new List<ulong> { Xa, Xb, Ya, Yb, Zab, Zba };
         }
 
@@ -146,14 +146,14 @@ namespace zi_labs
                 ulong value = (fast_exp(a, j, p) * y) % p;
                 baby[value] = j;
             }
-            Console.WriteLine(string.Join(", ", baby));
+            /*Console.WriteLine(string.Join(", ", baby));*/
 
             List<ulong> giant = new List<ulong>();
             for (ulong i = 1; i <= k; i++)
             {
                 giant.Add(fast_exp(a, m * i, p));
             }
-            Console.WriteLine(string.Join(", ", giant));
+            /*Console.WriteLine(string.Join(", ", giant));*/
 
             for (ulong i = 1; i <= k; i++)
             {
