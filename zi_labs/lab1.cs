@@ -108,7 +108,7 @@ namespace zi_labs
                 }
 
             }
-            Console.WriteLine("f\"q = " + q);
+            Console.WriteLine("q = " + q);
             Console.WriteLine("p = " + p);
             while (fast_exp(g, q, p) != 1)
             {

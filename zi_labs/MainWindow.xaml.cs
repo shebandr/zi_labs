@@ -168,8 +168,16 @@ namespace zi_labs
 
             }
             p = UInt64.Parse(l14p.Text);
-            ulong l14o = (ulong)lab1.giant_baby_step(a, x, p);
-            l14out.Text = l14o.ToString();
+                if (lab1.giant_baby_step(a, x, p) != null) 
+            {
+                ulong l14o = (ulong)lab1.giant_baby_step(a, x, p);
+                l14out.Text = l14o.ToString();
+
+            }
+            else
+            {
+                l14out.Text = "Нет решения";
+            }
 
 
         }
