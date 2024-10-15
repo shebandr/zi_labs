@@ -24,37 +24,59 @@ namespace zi_labs
         public MainWindow()
         {
             InitializeComponent();
-            Console.WriteLine("Функция быстрого возведения числа в степень по модулю:");
-            Random rnd = new Random();
-            ulong p = lab1.generate_prime(100000000, 1000000000);
-            ulong a = (ulong)rnd.Next(10000, 100000);
-            ulong x = (ulong)rnd.Next(0, (int)p);
+            //защита 1 лабы
+            /*            Console.WriteLine("Функция быстрого возведения числа в степень по модулю:");
+                        Random rnd = new Random();
+                        ulong p = lab1.generate_prime(100000000, 1000000000);
+                        ulong a = (ulong)rnd.Next(10000, 100000);
+                        ulong x = (ulong)rnd.Next(0, (int)p);
 
-            ulong y = lab1.fast_exp(a, x, p);
-            Console.WriteLine("a = " + a + " x = " + x + " p = " + p + "  Ответ: " + y);
+                        ulong y = lab1.pow_module(a, x, p);
+                        Console.WriteLine("a = " + a + " x = " + x + " p = " + p + "  Ответ: " + y);
 
-            var X = lab1.giant_baby_step(a, p, y);
-            Console.WriteLine(" X = " + X);
+                        var X = lab1.giant_baby_step(a, p, y);
+                        Console.WriteLine(" X = " + X);
 
-            if(X != x)
+                        if(X != x)
+                        {
+                            ulong Y = lab1.pow_module(a, (ulong)X, p);
+                            Console.WriteLine("Новое решение: " + Y);
+                        }
+
+                        ulong prime1 = lab1.generate_prime(1000000, 1000000000);
+                        System.Threading.Thread.Sleep(50);
+                        ulong prime2 = lab1.generate_prime(1000000, 1000000000);
+                        System.Threading.Thread.Sleep(50);
+                        ulong prime3 = lab1.generate_prime(1000000, 1000000000) + 1;
+                        System.Threading.Thread.Sleep(50);
+                        ulong prime4 = lab1.generate_prime(1000000, 1000000000) + 1;
+                        System.Threading.Thread.Sleep(50);
+                        List<ulong> primelist1 = lab1.gcd_mod(prime1, prime2);
+                        List<ulong> primelist2 = lab1.gcd_mod(prime3, prime4);
+                        Console.WriteLine("Евклид:");
+                        Console.WriteLine("простые числа: " + primelist1[0]);
+                        Console.WriteLine("четные числа: " + primelist2[0]);*/
+
+            //подготовка второй лабы
+            Console.WriteLine("Проверка Вернама: ");
+            byte[] array1 = { 0x55, 0x33, 0xAA, 0x00, 0x01, 0x02, 0xFF };
+            byte[] array2 = lab2.VernamEncode(array1);
+            byte[] array3 = lab2.VernamDecode(array2);
+            for( int i = 0; i < array1.Length; i++ )
             {
-                ulong Y = lab1.fast_exp(a, (ulong)X, p);
-                Console.WriteLine("Новое решение: " + Y);
+                Console.WriteLine(array1[i] + " " + array3[i]);
             }
 
-            ulong prime1 = lab1.generate_prime(1000000, 1000000000);
-            System.Threading.Thread.Sleep(50);
-            ulong prime2 = lab1.generate_prime(1000000, 1000000000);
-            System.Threading.Thread.Sleep(50);
-            ulong prime3 = lab1.generate_prime(1000000, 1000000000) + 1;
-            System.Threading.Thread.Sleep(50);
-            ulong prime4 = lab1.generate_prime(1000000, 1000000000) + 1;
-            System.Threading.Thread.Sleep(50);
-            List<ulong> primelist1 = lab1.eucl(prime1, prime2);
-            List<ulong> primelist2 = lab1.eucl(prime3, prime4);
-            Console.WriteLine("Евклид:");
-            Console.WriteLine("простые числа: " + primelist1[0]);
-            Console.WriteLine("четные числа: " + primelist2[0]);
+
+
+
+            Console.WriteLine("Проверка RSA: ");
+            ulong[] array5 = lab2.RSAEncode(array1);
+            array3 = lab2.RSADecode(array5);
+            for (int i = 0; i < array1.Length; i++)
+            {
+                Console.WriteLine(array1[i] + " " + array5[i] +  " " + array3[i]);
+            }
         }
 
         private void button_click_l11(object sender, RoutedEventArgs e)
@@ -98,7 +120,7 @@ namespace zi_labs
 
             }
             p = UInt64.Parse(l11p.Text);
-            ulong l11o = lab1.fast_exp(a, x, p);
+            ulong l11o = lab1.pow_module(a, x, p);
             l11out.Text = l11o.ToString();
 
 
@@ -133,7 +155,7 @@ namespace zi_labs
             x = UInt64.Parse(l12x.Text);
 
 
-            List<ulong> l12o = lab1.eucl(a, x);
+            List<ulong> l12o = lab1.gcd_mod(a, x);
             l12out.Text = "= " + l12o[0].ToString() + "  k1: " + l12o[1].ToString() + "  l2: " + l12o[2].ToString();
 
 

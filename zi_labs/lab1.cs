@@ -12,7 +12,23 @@ namespace zi_labs
     {
         public lab1() { }
 
-        public static ulong fast_exp(ulong a, ulong x, ulong p)
+        public static ulong GenerateRandomUlong(ulong min, ulong max)
+        {
+            Random rnd = new Random(Guid.NewGuid().GetHashCode());
+            if (min >= max)
+            {
+                throw new ArgumentException("Минимальное значение должно быть меньше максимального.");
+            }
+
+            ulong range = max - min;
+            byte[] buffer = new byte[sizeof(ulong)];
+            rnd.NextBytes(buffer);
+            ulong randomValue = BitConverter.ToUInt64(buffer, 0);
+
+            return (randomValue % range) + min;
+        }
+
+        public static ulong pow_module(ulong a, ulong x, ulong p)
         {
             ulong result = 1;
             a = a % p;
@@ -35,7 +51,7 @@ namespace zi_labs
 
             return result;
         }
-        public static List<ulong> eucl(ulong a, ulong b)
+        public static List<ulong> gcd_mod(ulong a, ulong b)
         {
             List<ulong> U = new List<ulong> { a, 1, 0 };
             List<ulong> V = new List<ulong> { b, 0, 1 };
@@ -55,8 +71,8 @@ namespace zi_labs
 
             if (p<=1) return false;
             else if (p==2) return true;
-            ulong a = (ulong)rnd.Next(2, Convert.ToInt32(p) - 1);
-            if(fast_exp(a, (p-1), p) != 1 || gcd(p, a) > 1){
+            ulong a = GenerateRandomUlong(2, p-1);
+            if(pow_module(a, (p-1), p) != 1 || gcd(p, a) > 1){
                 return false;
             } 
             return true;
@@ -75,10 +91,9 @@ namespace zi_labs
 
         public static ulong generate_prime(ulong left, ulong right)
         {
-            Random rnd = new Random();
             while (true)
             {
-                ulong p = (ulong)rnd.Next((int)left, (int)right);
+                ulong p = GenerateRandomUlong(left, right);
                 if(check_prime(p)) return p;
             }
         }
@@ -111,7 +126,7 @@ namespace zi_labs
 
             Console.WriteLine("q = " + q);
             Console.WriteLine("p = " + p);
-            while (fast_exp(g, q, p) == 1)
+            while (pow_module(g, q, p) == 1)
             {
                 g = (ulong)rnd.Next(1, (int)(p -1));
 
@@ -123,14 +138,14 @@ namespace zi_labs
             Console.WriteLine("Xa = " + Xa);
             Console.WriteLine("Xb = " + Xb);
 
-            Ya = fast_exp(g, Xa, p);
-            Yb = fast_exp(g, Xb, p);
+            Ya = pow_module(g, Xa, p);
+            Yb = pow_module(g, Xb, p);
             Console.WriteLine("Открытые ключи: ");
             Console.WriteLine("Ya = " + Ya);
             Console.WriteLine("Yb = " + Yb);
 
-            Zab = fast_exp(Yb, Xa, p);
-            Zba = fast_exp(Ya, Xb, p);
+            Zab = pow_module(Yb, Xa, p);
+            Zba = pow_module(Ya, Xb, p);
 
             return new List<ulong> { Xa, Xb, Ya, Yb, Zab, Zba };
         }
@@ -143,7 +158,7 @@ namespace zi_labs
             Dictionary<ulong, ulong> baby = new Dictionary<ulong, ulong>();
             for (ulong j = 0; j < m; j++)
             {
-                ulong value = (fast_exp(a, j, p) * y) % p;
+                ulong value = (pow_module(a, j, p) * y) % p;
                 baby[value] = j;
             }
             /*Console.WriteLine(string.Join(", ", baby));*/
@@ -151,7 +166,7 @@ namespace zi_labs
             List<ulong> giant = new List<ulong>();
             for (ulong i = 1; i <= k; i++)
             {
-                giant.Add(fast_exp(a, m * i, p));
+                giant.Add(pow_module(a, m * i, p));
             }
             /*Console.WriteLine(string.Join(", ", giant));*/
 
