@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Numerics;
+using Microsoft.Win32;
 
 
 namespace zi_labs
@@ -23,6 +24,7 @@ namespace zi_labs
     /// </summary>
     public partial class MainWindow : Window
     {
+        private string lab2FilePath;
         public MainWindow()
         {
             InitializeComponent();
@@ -92,16 +94,104 @@ namespace zi_labs
                         }*/
 
 
-            Console.WriteLine("Проверка Шамира: ");
+/*            Console.WriteLine("Проверка Шамира: ");
             byte[] array1 = { 0x55, 0x33, 0xAA, 0x00, 0x01, 0x02, 0xFF };
             BigInteger[] array2 = lab2.ShamirEncode(array1);
             byte[] array3 = lab2.ShamirDecode(array2);
             for (int i = 0; i < array1.Length; i++)
             {
                 Console.WriteLine(array1[i] + "  " + array2[i] + " " + array3[i]);
-            }
+            }*/
 
         }
+
+
+        private void lab1Start(object sender, RoutedEventArgs e)
+        {
+            lab1Grid.Height = 800;
+            lab2Grid.Height = 0;
+            lab3Grid.Height = 0;
+            lab4Grid.Height = 0;
+
+        }
+        private void lab2Start(object sender, RoutedEventArgs e)
+        {
+            lab1Grid.Height = 0;
+            lab2Grid.Height = 800;
+            lab3Grid.Height = 0;
+            lab4Grid.Height = 0;
+
+        }
+        private void lab3Start(object sender, RoutedEventArgs e)
+        {
+            lab1Grid.Height = 0;
+            lab2Grid.Height = 0;
+            lab3Grid.Height = 800;
+            lab4Grid.Height = 0;
+
+        }
+        private void lab4Start(object sender, RoutedEventArgs e)
+        {
+            lab1Grid.Height = 0;
+            lab2Grid.Height = 0;
+            lab3Grid.Height = 0;
+            lab4Grid.Height = 800;
+
+        }
+
+        private void fileOpen(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                lab2FilePath = openFileDialog.FileName;
+            }
+            Console.WriteLine(lab2FilePath);
+        }
+
+        private void Encode(object sender, RoutedEventArgs e)
+        {
+            Button senderButton = sender as Button;
+            Console.WriteLine(senderButton.Tag);
+
+            byte[] fileBuffer = lab2.ReadFile(lab2FilePath);
+            Console.WriteLine(fileBuffer.Length);
+            BigInteger[] encodedFileBuffer = { };
+            byte[] outputFileBuffer = { };
+            byte[] encodedFileBufferByte = { };
+            switch (senderButton.Tag)
+            {
+                case "0":
+                    encodedFileBuffer = lab2.ShamirEncode(fileBuffer);
+                    outputFileBuffer = lab2.ShamirDecode(encodedFileBuffer);
+
+                    //вызов Шамира
+                    break;
+                case "1":
+                    encodedFileBuffer = lab2.ElGamalEncode(fileBuffer);
+                    outputFileBuffer = lab2.ElGamalDecode(encodedFileBuffer);
+                    //вызов Эль-Гамаля
+                    break;
+                case "2":
+                    encodedFileBufferByte = lab2.VernamEncode(fileBuffer);
+                    outputFileBuffer = lab2.VernamDecode(encodedFileBufferByte);
+                    //вызов Вернама
+                    break;
+                case "3":
+                    encodedFileBuffer = lab2.RSAEncode(fileBuffer);
+                    outputFileBuffer = lab2.RSADecode(encodedFileBuffer);
+                    //вызов RSA
+                    break;
+            }
+            Console.WriteLine("Длина: " + fileBuffer.Length + " " + encodedFileBuffer.Length + " " + outputFileBuffer.Length);
+            string[] outputNameArr = lab2FilePath.Split('.');
+            string lab2FilePathOutput = outputNameArr[0] + "2" + outputNameArr[1];
+            lab2.WriteBytesToFile(lab2FilePathOutput, outputFileBuffer);
+        }
+
+
 
         private void button_click_l11(object sender, RoutedEventArgs e)
         {

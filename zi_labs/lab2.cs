@@ -65,7 +65,6 @@ namespace zi_labs
             for (int i = 0; i < data.Length; i++)
             {
                 output[i] = (byte)(data[i] ^ vernamKeys[i]);
-                Console.WriteLine(data[i] + " " + vernamKeys[i] + " " + output[i]);
             }
             return output;
         }
@@ -77,8 +76,6 @@ namespace zi_labs
             for (int i = 0; i < data.Length; i++)
             {
                 output[i] = (byte)(data[i] ^ vernamKeys[i]);
-
-                Console.WriteLine(output[i] + " " + vernamKeys[i] + " " + data[i]);
             }
             return output;
         }
@@ -247,6 +244,19 @@ namespace zi_labs
             }
 
             return output;
+        }
+        public static void WriteBytesToFile(string filePath, byte[] byteArray)
+        {
+            try
+            {
+                // Записываем массив байтов в файл
+                File.WriteAllBytes(filePath, byteArray);
+                Console.WriteLine("Файл успешно записан.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка при записи файла: {ex.Message}");
+            }
         }
 
     } 
