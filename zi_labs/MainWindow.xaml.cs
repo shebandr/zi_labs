@@ -13,6 +13,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Numerics;
+
 
 namespace zi_labs
 {
@@ -58,25 +60,47 @@ namespace zi_labs
                         Console.WriteLine("четные числа: " + primelist2[0]);*/
 
             //подготовка второй лабы
-            Console.WriteLine("Проверка Вернама: ");
+            /*            Console.WriteLine("Проверка Вернама: ");
+                        byte[] array1 = { 0x55, 0x33, 0xAA, 0x00, 0x01, 0x02, 0xFF };
+                        byte[] array2 = lab2.VernamEncode(array1);
+                        byte[] array3 = lab2.VernamDecode(array2);
+                        for( int i = 0; i < array1.Length; i++ )
+                        {
+                            Console.WriteLine(array1[i] + " " + array3[i]);
+                        }
+
+
+
+
+                        Console.WriteLine("Проверка RSA: ");
+                        BigInteger[] array5 = lab2.RSAEncode(array1);
+                        array3 = lab2.RSADecode(array5);
+                        for (int i = 0; i < array1.Length; i++)
+                        {
+                            Console.WriteLine(array1[i] + " " + array5[i] +  " " + array3[i]);
+                        }
+
+                        Console.WriteLine("Проверка степени: " + lab1.pow_module(85, 82056381197643673, 471863054612645153));*/
+
+            /*            Console.WriteLine("Проверка Эл Гамала: ");
+                        byte[] array1 = { 0x55, 0x33, 0xAA, 0x00, 0x01, 0x02, 0xFF };
+                        BigInteger[] array2 = lab2.ElGamalEncode(array1);
+                        byte[] array3 = lab2.ElGamalDecode(array2);
+                        for (int i = 0; i < array1.Length; i++)
+                        {
+                            Console.WriteLine(array1[i] + "  " + array2[i] + " " + array3[i]);
+                        }*/
+
+
+            Console.WriteLine("Проверка Шамира: ");
             byte[] array1 = { 0x55, 0x33, 0xAA, 0x00, 0x01, 0x02, 0xFF };
-            byte[] array2 = lab2.VernamEncode(array1);
-            byte[] array3 = lab2.VernamDecode(array2);
-            for( int i = 0; i < array1.Length; i++ )
-            {
-                Console.WriteLine(array1[i] + " " + array3[i]);
-            }
-
-
-
-
-            Console.WriteLine("Проверка RSA: ");
-            ulong[] array5 = lab2.RSAEncode(array1);
-            array3 = lab2.RSADecode(array5);
+            BigInteger[] array2 = lab2.ShamirEncode(array1);
+            byte[] array3 = lab2.ShamirDecode(array2);
             for (int i = 0; i < array1.Length; i++)
             {
-                Console.WriteLine(array1[i] + " " + array5[i] +  " " + array3[i]);
+                Console.WriteLine(array1[i] + "  " + array2[i] + " " + array3[i]);
             }
+
         }
 
         private void button_click_l11(object sender, RoutedEventArgs e)
@@ -120,7 +144,7 @@ namespace zi_labs
 
             }
             p = UInt64.Parse(l11p.Text);
-            ulong l11o = lab1.pow_module(a, x, p);
+            BigInteger l11o = lab1.pow_module(a, x, p);
             l11out.Text = l11o.ToString();
 
 
@@ -155,14 +179,14 @@ namespace zi_labs
             x = UInt64.Parse(l12x.Text);
 
 
-            List<ulong> l12o = lab1.gcd_mod(a, x);
+            List<BigInteger> l12o = lab1.gcd_mod(a, x);
             l12out.Text = "= " + l12o[0].ToString() + "  k1: " + l12o[1].ToString() + "  l2: " + l12o[2].ToString();
 
 
         }
         private void button_click_l13(object sender, RoutedEventArgs e)
         {
-            List<ulong> L = lab1.diffie_hellman_algorithm();
+            List<BigInteger> L = lab1.diffie_hellman_algorithm();
             l13out1.Text = "Закрытые ключи a: " + L[0] + "  b: " + L[1];
             l13out2.Text = "Открытые ключи Ya: " + L[2] + "  Yb: " + L[3];
             l13out3.Text = "Секретные ключи Zab: " + L[4] + "  Zba: " + L[5];
