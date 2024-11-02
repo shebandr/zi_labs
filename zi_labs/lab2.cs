@@ -12,9 +12,13 @@ namespace zi_labs
     {
 
         public static byte[] vernamKeys;
+        public static byte[] vernamKeys2;
         public static List<BigInteger> RSAKeys;
+        public static byte[] RSAKeys2;
         public static List<BigInteger> GamalKeys;
+        public static byte[] GamalKeys2;
         public static List<BigInteger> ShamirKeys;
+        public static byte[] ShamirKeys2;
 
         public static BigInteger GenerateCoprime(BigInteger p)
         {
@@ -51,31 +55,66 @@ namespace zi_labs
             return fileBytes;
         }
 
-        public static byte[] VernamEncode(byte[] data)
+
+        public static byte[] VernamEncodeUnsafe(byte[] data)
         {
             Random rnd = new Random();
-            vernamKeys = new byte[data.Length];
+            vernamKeys2 = new byte[data.Length];
             Console.WriteLine("шифрование :");
             for (int i = 0; i < data.Length; i++)
             {
-                vernamKeys[i] = (byte)rnd.Next(0, 255);
+                vernamKeys2[i] = (byte)rnd.Next(0, 255);
             }
             byte[] output = new byte[data.Length];
-           
+
             for (int i = 0; i < data.Length; i++)
             {
-                output[i] = (byte)(data[i] ^ vernamKeys[i]);
+                output[i] = (byte)(data[i] ^ vernamKeys2[i]);
             }
             return output;
         }
 
-        public static byte[] VernamDecode(byte[] data)
+        public static byte[] VernamDecodeUnsafe(byte[] data)
         {
             byte[] output = new byte[data.Length];
             Console.WriteLine("дешифровка:");
             for (int i = 0; i < data.Length; i++)
             {
-                output[i] = (byte)(data[i] ^ vernamKeys[i]);
+                output[i] = (byte)(data[i] ^ vernamKeys2[i]);
+            }
+            return output;
+        }
+
+
+        public static byte[] VernamEncode(byte[] data)
+        {
+            Random rnd = new Random();
+            byte[] vernamKeysLocal = new byte[data.Length];
+            Console.WriteLine("шифрование :");
+
+            for (int i = 0; i < data.Length; i++)
+            {
+                vernamKeysLocal[i] = (byte)rnd.Next(0, 255);
+            }
+            
+            byte[] output = new byte[data.Length];
+           
+            for (int i = 0; i < data.Length; i++)
+            {
+                output[i] = (byte)(data[i] ^ vernamKeysLocal[i]);
+            }
+            vernamKeys = VernamEncodeUnsafe(vernamKeysLocal);
+            return output;
+        }
+
+        public static byte[] VernamDecode(byte[] data)
+        {
+            byte[] vernamKeysLocal = VernamDecodeUnsafe(vernamKeys);
+            byte[] output = new byte[data.Length];
+            Console.WriteLine("дешифровка:");
+            for (int i = 0; i < data.Length; i++)
+            {
+                output[i] = (byte)(data[i] ^ vernamKeysLocal[i]);
             }
             return output;
         }
@@ -130,7 +169,6 @@ namespace zi_labs
             for(int i = 0; i < data.Length; i++)
             {
                 BigInteger e = lab1.pow_module(data[i], c, N);
-                Console.WriteLine(e);
                 output[i] = (byte)e;
             }
 
@@ -258,6 +296,68 @@ namespace zi_labs
                 Console.WriteLine($"Ошибка при записи файла: {ex.Message}");
             }
         }
+        
 
-    } 
+    public static void WriteBigIntegersToFile(string filePath, BigInteger[] bigIntegers)
+    {
+        try
+        {
+            using (FileStream fs = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+            {
+                foreach (BigInteger bigInt in bigIntegers)
+                {
+                    // Преобразуем BigInteger в массив байтов
+                    byte[] byteArray = bigInt.ToByteArray();
+
+                    // Записываем длину массива байтов (4 байта)
+                    fs.Write(BitConverter.GetBytes(byteArray.Length), 0, 4);
+
+                    // Записываем сам массив байтов
+                    fs.Write(byteArray, 0, byteArray.Length);
+                }
+            }
+            Console.WriteLine("Файл успешно записан.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Ошибка при записи файла: {ex.Message}");
+        }
+    }
+
+
+public static BigInteger[] ReadBigIntegersFromFile(string filePath)
+    {
+        try
+        {
+            using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            {
+                List<BigInteger> bigIntegers = new List<BigInteger>();
+
+                while (fs.Position < fs.Length)
+                {
+                    // Читаем длину массива байтов (4 байта)
+                    byte[] lengthBytes = new byte[4];
+                    fs.Read(lengthBytes, 0, 4);
+                    int length = BitConverter.ToInt32(lengthBytes, 0);
+
+                    // Читаем сам массив байтов
+                    byte[] byteArray = new byte[length];
+                    fs.Read(byteArray, 0, length);
+
+                    // Преобразуем массив байтов обратно в BigInteger
+                    BigInteger bigInt = new BigInteger(byteArray);
+                    bigIntegers.Add(bigInt);
+                }
+
+                return bigIntegers.ToArray();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Ошибка при чтении файла: {ex.Message}");
+            return null;
+        }
+    }
+
+} 
 }

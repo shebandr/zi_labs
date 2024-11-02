@@ -161,33 +161,67 @@ namespace zi_labs
             BigInteger[] encodedFileBuffer = { };
             byte[] outputFileBuffer = { };
             byte[] encodedFileBufferByte = { };
+
+            string[] outputNameArr = lab2FilePath.Split('.');
             switch (senderButton.Tag)
             {
                 case "0":
                     encodedFileBuffer = lab2.ShamirEncode(fileBuffer);
+                    //вызов Шамира
+                    break;
+                case "1":
+                    encodedFileBuffer = lab2.ElGamalEncode(fileBuffer);
+                    //вызов Эль-Гамаля
+                    break;
+                case "2":
+                    encodedFileBufferByte = lab2.VernamEncode(fileBuffer);
+                    //вызов Вернама
+                    break;
+                case "3":
+                    encodedFileBuffer = lab2.RSAEncode(fileBuffer);
+                    //вызов RSA
+                    break;
+            }
+
+
+
+            string lab2FilePathOutput = outputNameArr[0] + "2." + outputNameArr[1];
+            if(senderButton.Tag.ToString() != "2")
+            {
+                lab2.WriteBigIntegersToFile(outputNameArr[0] + ".Encoded", encodedFileBuffer);
+
+            } else
+            {
+
+                Console.WriteLine("Проверка гойды: " + encodedFileBufferByte.Length + " " + outputNameArr[0]);
+                lab2.WriteBytesToFile(outputNameArr[0] + ".Encoded", encodedFileBufferByte);
+            }
+            encodedFileBuffer = null;
+
+            encodedFileBuffer = lab2.ReadBigIntegersFromFile(outputNameArr[0] + ".Encoded");
+
+            switch (senderButton.Tag)
+            {
+                case "0":
                     outputFileBuffer = lab2.ShamirDecode(encodedFileBuffer);
 
                     //вызов Шамира
                     break;
                 case "1":
-                    encodedFileBuffer = lab2.ElGamalEncode(fileBuffer);
                     outputFileBuffer = lab2.ElGamalDecode(encodedFileBuffer);
                     //вызов Эль-Гамаля
                     break;
                 case "2":
-                    encodedFileBufferByte = lab2.VernamEncode(fileBuffer);
                     outputFileBuffer = lab2.VernamDecode(encodedFileBufferByte);
                     //вызов Вернама
                     break;
                 case "3":
-                    encodedFileBuffer = lab2.RSAEncode(fileBuffer);
                     outputFileBuffer = lab2.RSADecode(encodedFileBuffer);
                     //вызов RSA
                     break;
             }
-            Console.WriteLine("Длина: " + fileBuffer.Length + " " + encodedFileBuffer.Length + " " + outputFileBuffer.Length);
-            string[] outputNameArr = lab2FilePath.Split('.');
-            string lab2FilePathOutput = outputNameArr[0] + "2" + outputNameArr[1];
+/*            Console.WriteLine("Длина: " + fileBuffer.Length + " " + encodedFileBuffer.Length + " " + outputFileBuffer.Length);*/
+            
             lab2.WriteBytesToFile(lab2FilePathOutput, outputFileBuffer);
         }
 
