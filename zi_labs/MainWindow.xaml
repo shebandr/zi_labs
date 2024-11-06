@@ -65,7 +65,7 @@
         <TextBlock Grid.Column="2" Grid.Row="6" x:Name="l14out" ></TextBlock>
     </Grid>
 
-        <Grid x:Name="lab2Grid">
+        <Grid x:Name="lab2Grid" Height="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition />
@@ -99,7 +99,39 @@
         </Grid>
 
         <Grid x:Name="lab3Grid">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30px" />
+                <RowDefinition Height="30px"/>
+                <RowDefinition Height="30px"/>
+                <RowDefinition Height="30px"/>
 
+            </Grid.RowDefinitions>
+            <Button Click="fileOpen" Grid.Column="0" Grid.Row="0">
+                Выбрать файл
+            </Button>
+            <Button Click="Sign" Tag="0" Grid.Column="1" Grid.Row="0">
+                Подпись Эль-Гамаля
+            </Button>
+            <Button Click="Sign" Tag="1" Grid.Column="1" Grid.Row="1">
+                Подпись RSA
+            </Button>
+            <Button Click="Sign" Tag="2" Grid.Column="1" Grid.Row="2">
+                Подпись ГОСТ
+            </Button>
+            <Button Click="Unsign" Tag="0" Grid.Column="2" Grid.Row="0">
+                Проверить подпись Эль-Гамаля
+            </Button>
+            <Button Click="Unsign" Tag="1" Grid.Column="2" Grid.Row="1">
+                Проверить подпись RSA
+            </Button>
+            <Button Click="Unsign" Tag="2" Grid.Column="2" Grid.Row="2">
+                Проверить подпись ГОСТ
+            </Button>
         </Grid>
 
         <Grid x:Name="lab4Grid">

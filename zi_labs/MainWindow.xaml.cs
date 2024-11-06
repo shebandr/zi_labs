@@ -25,6 +25,8 @@ namespace zi_labs
     public partial class MainWindow : Window
     {
         private string lab2FilePath;
+        private List<BigInteger> currentSign;
+        private BigInteger currentSignBigInteger;
         public MainWindow()
         {
             InitializeComponent();
@@ -150,6 +152,59 @@ namespace zi_labs
             }
             Console.WriteLine(lab2FilePath);
         }
+
+        private void Sign(object sender, RoutedEventArgs e)
+        {
+            Button senderButton = sender as Button;
+            Console.WriteLine(senderButton.Tag);
+
+            byte[] fileBuffer = lab2.ReadFile(lab2FilePath);
+            Console.WriteLine(fileBuffer.Length);
+
+
+            switch (senderButton.Tag)
+            {
+                case "0":
+                    currentSign = lab3.ElGamalSing(fileBuffer);
+                    break;
+                case "1":
+                    currentSign = lab3.RSASign(fileBuffer);
+                    break;
+                case "2":
+                    currentSignBigInteger = lab3.GOSTSign(fileBuffer);
+                    break;
+
+            }
+        }
+
+
+        private void Unsign(object sender, RoutedEventArgs e)
+        {
+            Button senderButton = sender as Button;
+            Console.WriteLine(senderButton.Tag);
+
+            byte[] fileBuffer = lab2.ReadFile(lab2FilePath);
+            Console.WriteLine(fileBuffer.Length);
+            bool signCheck = false;
+
+
+            switch (senderButton.Tag)
+            {
+                case "0":
+                    signCheck = lab3.ElGamalSingCheck(fileBuffer, currentSign);
+                    break;
+                case "1":
+                    signCheck = lab3.RSASignCheck(fileBuffer, currentSign);
+                    break;
+                case "2":
+                    signCheck = lab3.GOSTSignCheck(fileBuffer, currentSignBigInteger);
+                    break;
+
+
+            }
+            Console.WriteLine("итоговая проверка подписи: " + signCheck);
+        }
+
 
         private void Encode(object sender, RoutedEventArgs e)
         {

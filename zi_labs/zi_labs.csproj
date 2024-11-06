@@ -66,6 +66,7 @@
     </Compile>
     <Compile Include="lab1.cs" />
     <Compile Include="lab2.cs" />
+    <Compile Include="lab3.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
