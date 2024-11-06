@@ -192,12 +192,15 @@ namespace zi_labs
             {
                 case "0":
                     signCheck = lab3.ElGamalSingCheck(fileBuffer, currentSign);
+                    l3Output.Content = signCheck;
                     break;
                 case "1":
                     signCheck = lab3.RSASignCheck(fileBuffer, currentSign);
+                    l3Output.Content = signCheck;
                     break;
                 case "2":
                     signCheck = lab3.GOSTSignCheck(fileBuffer, currentSignBigInteger);
+                    l3Output.Content = signCheck;
                     break;
 
 

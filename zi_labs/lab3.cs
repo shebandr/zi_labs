@@ -63,27 +63,20 @@ namespace zi_labs
             string hashString = BitConverter.ToString(hash);
             Console.WriteLine("MD5 hash: " + hashString);
 
-            Console.WriteLine("Цифровое представление хэша:");
-            foreach (byte b in hash)
-            {
-                Console.WriteLine(b);
-            }
-
             List<BigInteger> sign = new List<BigInteger>();
             foreach (byte b in hash)
             {
-                BigInteger i = new BigInteger(b);
-                List<BigInteger> gcdResult = lab1.gcd_mod(i, p - 1);
-                BigInteger value = ((gcdResult[1] * i) % (p - 1));
+                BigInteger hashValue = new BigInteger(b);
+                BigInteger s = (ModInverse(k, p - 1) * (hashValue - x * r)) % (p - 1);
 
                 // Приведение результата по модулю к положительному значению
-                if (value < 0)
+                if (s < 0)
                 {
-                    value += (p - 1);
+                    s += (p - 1);
                 }
 
-                sign.Add(value);
-                Console.WriteLine(value);
+                sign.Add(s);
+                Console.WriteLine(s);
             }
 
             GamalKeys = new List<BigInteger> { p, g, y, r };
@@ -104,25 +97,32 @@ namespace zi_labs
             {
                 hash = md5.ComputeHash(data);
             }
-            foreach (byte b in hash)
-            {
-                signCalculated.Add(lab1.pow_module(g, b, p));
-            }
+
             string hashString = BitConverter.ToString(hash);
             Console.WriteLine("MD5 hash: " + hashString);
 
             List<BigInteger> res = new List<BigInteger>();
-            foreach (BigInteger i in sign)
+            for (int i = 0; i < hash.Length; i++)
             {
-                BigInteger value = (lab1.pow_module(y, r, p) * lab1.pow_module(r, i, p)) % p;
+                BigInteger b = new BigInteger(hash[i]);
+                BigInteger s = sign[i];
 
-                if (value < 0)
+                BigInteger v1 = (lab1.pow_module(y, r, p) * lab1.pow_module(r, s, p)) % p;
+                BigInteger v2 = lab1.pow_module(g, b, p);
+
+                if (v1 < 0)
                 {
-                    value += p;
+                    v1 += p;
                 }
 
-                res.Add(value);
-                Console.WriteLine(value + " " + res.Count);
+                if (v2 < 0)
+                {
+                    v2 += p;
+                }
+
+                res.Add(v1);
+                signCalculated.Add(v2);
+                Console.WriteLine(v1 + " == " + v2);
             }
 
             Console.WriteLine("Проверка длин подписей: " + signCalculated.Count + " " + res.Count);
@@ -137,6 +137,37 @@ namespace zi_labs
             }
 
             return true;
+        }
+
+        public static BigInteger ModInverse(BigInteger a, BigInteger m)
+        {
+            BigInteger m0 = m;
+            BigInteger y = 0, x = 1;
+
+            if (m == 1)
+                return 0;
+
+            while (a > 1)
+            {
+                // q является частным
+                BigInteger q = a / m;
+                BigInteger t = m;
+
+                // m остаток от деления, процесс как в алгоритме Евклида
+                m = a % m;
+                a = t;
+                t = y;
+
+                // Обновляем x и y
+                y = x - q * y;
+                x = t;
+            }
+
+            // Делаем x положительным
+            if (x < 0)
+                x += m0;
+
+            return x;
         }
 
         public static List<BigInteger> RSASign(byte[] data)
@@ -205,27 +236,38 @@ namespace zi_labs
 
         public static BigInteger GOSTSign(byte[] data)
         {
-            BigInteger q = lab1.GenerateRandomBigInteger(0, 1000000000);
-            BigInteger b = lab1.GenerateRandomBigInteger(0, 1000000000);
-            BigInteger p = 1; 
-            while (!lab1.check_prime(q * b + 1))
+            BigInteger q, p, b, g, a, x, y, hash, r, s, k;
+
+            // Генерация простых чисел p и q
+            while (true)
             {
+                q = lab1.generate_prime(0, 1000000000);
                 b = lab1.GenerateRandomBigInteger(0, 1000000000);
                 p = q * b + 1;
+                if (lab1.check_prime(p))
+                {
+                    break;
+                }
             }
             Console.WriteLine(" p = " + p + " q = " + q + " b = " + b);
 
-            BigInteger g = lab1.GenerateRandomBigInteger(0, p - 1);
-            BigInteger a = lab1.pow_module(g, b, p);
-            while (a <= 1)
+            // Генерация a
+            while (true)
             {
-                g = lab1.GenerateRandomBigInteger(1, p-1);
+                g = lab1.GenerateRandomBigInteger(1, p - 1);
                 a = lab1.pow_module(g, b, p);
+                if (a > 1)
+                {
+                    break;
+                }
             }
-            BigInteger x = lab1.GenerateRandomBigInteger(1, q-1);
-            BigInteger y = lab1.pow_module(a, x, p);
+
+            // Генерация секретного ключа x и вычисление открытого ключа y
+            x = lab1.GenerateRandomBigInteger(1, q - 1);
+            y = lab1.pow_module(a, x, p);
             Console.WriteLine("x = " + x + " y = " + y);
-            BigInteger hash;
+
+            // Вычисление хеша
             using (MD5 md5 = MD5.Create())
             {
                 byte[] hashArr = md5.ComputeHash(data);
@@ -234,21 +276,25 @@ namespace zi_labs
             }
             Console.WriteLine("хеш = " + hash);
 
-            BigInteger r = 0, s = 0, k = 0;
-            while (s == 0)
+            // Генерация подписи
+            while (true)
             {
-                while (r == 0)
+                k = lab1.GenerateRandomBigInteger(1, q - 1);
+                r = lab1.pow_module(a, k, p) % q;
+                if (r != 0)
                 {
-                    k = lab1.GenerateRandomBigInteger(1, q - 1);
-                    r = lab1.pow_module(a, k, p) % q;
+                    s = (k * hash + x * r) % q;
+                    if (s != 0)
+                    {
+                        break;
+                    }
                 }
-                s = (k * hash + x * r) % q;
             }
+
             GOSTKeys = new List<BigInteger> { q, a, y, p, r };
             return s;
-
-
         }
+
         public static bool GOSTSignCheck(byte[] data, BigInteger sign)
         {
             BigInteger q = GOSTKeys[0];
@@ -257,6 +303,7 @@ namespace zi_labs
             BigInteger p = GOSTKeys[3];
             BigInteger r = GOSTKeys[4];
 
+            // Вычисление хеша
             BigInteger hash;
             using (MD5 md5 = MD5.Create())
             {
@@ -265,21 +312,20 @@ namespace zi_labs
                 hash = BigInteger.Parse("0" + hexHash, System.Globalization.NumberStyles.HexNumber);
             }
 
-            BigInteger temp = lab1.gcd_mod(hash, q)[1];
-
-            if(temp < 1)
+            // Вычисление u1 и u2
+            BigInteger hashInverse = ModInverse(hash, q);
+            BigInteger u1 = (sign * hashInverse) % q;
+            BigInteger u2 = (-r * hashInverse) % q;
+            if (u2 < 0)
             {
-                temp += q;
+                u2 += q;
             }
-            BigInteger u1 = (sign * temp) % q;
-            BigInteger u2 = (-r * temp) % q;
+
+            // Вычисление v
             BigInteger v = ((lab1.pow_module(a, u1, p) * lab1.pow_module(y, u2, p)) % p) % q;
             Console.WriteLine(v + " == " + r);
-            if(v != r)
-            {
-                return false;
-            }
-            return true;
+
+            return v == r;
         }
     }
 }

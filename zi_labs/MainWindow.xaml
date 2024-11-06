@@ -114,6 +114,9 @@
             <Button Click="fileOpen" Grid.Column="0" Grid.Row="0">
                 Выбрать файл
             </Button>
+            <Label Grid.Row="2" Grid.Column="0" x:Name="l3Output">
+                
+            </Label>
             <Button Click="Sign" Tag="0" Grid.Column="1" Grid.Row="0">
                 Подпись Эль-Гамаля
             </Button>
