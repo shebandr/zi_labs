@@ -30,8 +30,6 @@ namespace zi_labs
             }
 
             Console.WriteLine("p = " + p);
-
-            // Генерация примитивного корня g
             while (true)
             {
                 g = lab1.GenerateRandomBigInteger(2, p - 1);
@@ -68,8 +66,6 @@ namespace zi_labs
             {
                 BigInteger hashValue = new BigInteger(b);
                 BigInteger s = (ModInverse(k, p - 1) * (hashValue - x * r)) % (p - 1);
-
-                // Приведение результата по модулю к положительному значению
                 if (s < 0)
                 {
                     s += (p - 1);
@@ -149,21 +145,14 @@ namespace zi_labs
 
             while (a > 1)
             {
-                // q является частным
                 BigInteger q = a / m;
                 BigInteger t = m;
-
-                // m остаток от деления, процесс как в алгоритме Евклида
                 m = a % m;
                 a = t;
                 t = y;
-
-                // Обновляем x и y
                 y = x - q * y;
                 x = t;
             }
-
-            // Делаем x положительным
             if (x < 0)
                 x += m0;
 
@@ -237,8 +226,6 @@ namespace zi_labs
         public static BigInteger GOSTSign(byte[] data)
         {
             BigInteger q, p, b, g, a, x, y, hash, r, s, k;
-
-            // Генерация простых чисел p и q
             while (true)
             {
                 q = lab1.generate_prime(0, 1000000000);
@@ -250,8 +237,6 @@ namespace zi_labs
                 }
             }
             Console.WriteLine(" p = " + p + " q = " + q + " b = " + b);
-
-            // Генерация a
             while (true)
             {
                 g = lab1.GenerateRandomBigInteger(1, p - 1);
@@ -261,13 +246,9 @@ namespace zi_labs
                     break;
                 }
             }
-
-            // Генерация секретного ключа x и вычисление открытого ключа y
             x = lab1.GenerateRandomBigInteger(1, q - 1);
             y = lab1.pow_module(a, x, p);
             Console.WriteLine("x = " + x + " y = " + y);
-
-            // Вычисление хеша
             using (MD5 md5 = MD5.Create())
             {
                 byte[] hashArr = md5.ComputeHash(data);
@@ -275,8 +256,6 @@ namespace zi_labs
                 hash = BigInteger.Parse("0" + hexHash, System.Globalization.NumberStyles.HexNumber);
             }
             Console.WriteLine("хеш = " + hash);
-
-            // Генерация подписи
             while (true)
             {
                 k = lab1.GenerateRandomBigInteger(1, q - 1);
@@ -302,8 +281,6 @@ namespace zi_labs
             BigInteger y = GOSTKeys[2];
             BigInteger p = GOSTKeys[3];
             BigInteger r = GOSTKeys[4];
-
-            // Вычисление хеша
             BigInteger hash;
             using (MD5 md5 = MD5.Create())
             {
@@ -311,8 +288,6 @@ namespace zi_labs
                 string hexHash = BitConverter.ToString(hashArr).Replace("-", "").ToLower();
                 hash = BigInteger.Parse("0" + hexHash, System.Globalization.NumberStyles.HexNumber);
             }
-
-            // Вычисление u1 и u2
             BigInteger hashInverse = ModInverse(hash, q);
             BigInteger u1 = (sign * hashInverse) % q;
             BigInteger u2 = (-r * hashInverse) % q;
@@ -320,8 +295,6 @@ namespace zi_labs
             {
                 u2 += q;
             }
-
-            // Вычисление v
             BigInteger v = ((lab1.pow_module(a, u1, p) * lab1.pow_module(y, u2, p)) % p) % q;
             Console.WriteLine(v + " == " + r);
 
