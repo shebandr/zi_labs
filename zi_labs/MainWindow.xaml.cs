@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Numerics;
 using Microsoft.Win32;
+using static System.Net.Mime.MediaTypeNames;
 
 
 namespace zi_labs
@@ -96,17 +97,172 @@ namespace zi_labs
                         }*/
 
 
-/*            Console.WriteLine("Проверка Шамира: ");
-            byte[] array1 = { 0x55, 0x33, 0xAA, 0x00, 0x01, 0x02, 0xFF };
-            BigInteger[] array2 = lab2.ShamirEncode(array1);
-            byte[] array3 = lab2.ShamirDecode(array2);
-            for (int i = 0; i < array1.Length; i++)
+            /*            Console.WriteLine("Проверка Шамира: ");
+                        byte[] array1 = { 0x55, 0x33, 0xAA, 0x00, 0x01, 0x02, 0xFF };
+                        BigInteger[] array2 = lab2.ShamirEncode(array1);
+                        byte[] array3 = lab2.ShamirDecode(array2);
+                        for (int i = 0; i < array1.Length; i++)
+                        {
+                            Console.WriteLine(array1[i] + "  " + array2[i] + " " + array3[i]);
+                        }*/
+           
+        }
+        
+        private void lab4Calc(object sender, RoutedEventArgs e)
+        {
+            int playerNum = Int32.Parse( lab4PlayersNum.Text);
+            List<List<string>> cards = lab4.MentalPoker(playerNum);
+            Console.Write("\n");
+            for(int i = 0; i<cards.Count;i++)
             {
-                Console.WriteLine(array1[i] + "  " + array2[i] + " " + array3[i]);
-            }*/
+                Console.WriteLine("x");
+                for(int j = 0; j < cards[i].Count; j++)
+                {
+                    Console.Write(cards[i][j] + " ");
+                    char TempType = cards[i][j][cards[i][j].Length - 1];
+                    cards[i][j] = cards[i][j].Remove(cards[i][j].Length - 1);
+                    cards[i][j] += lab4.Types[TempType.ToString()];
+                }
+            }
+
+
+
+            StackPanel lab4Table = (StackPanel)FindName("lab4Table");
+            lab4Table.Children.Clear();
+
+            foreach(var c in cards[cards.Count-1])
+            {
+                Border border = new Border
+                {
+                    Width = 40,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    Background = Brushes.LightGray,
+                    BorderThickness = new Thickness(1),
+                    BorderBrush = Brushes.Black
+                };
+
+                StackPanel stackPanel = new StackPanel
+                {
+                    HorizontalAlignment = HorizontalAlignment.Center
+                };
+
+                Label label1 = new Label();
+                Label label2 = new Label();
+                if (c[c.Length - 1] == '♥' || c[c.Length - 1] == '♦')
+                {
+                     label1 = new Label
+                    {
+                        Content = c[c.Length - 1],
+                        Foreground = Brushes.Red
+                    };
+                     label2 = new Label
+                    {
+                        Content = c.Substring(0, c.Length - 1),
+                        Foreground = Brushes.Red
+                    };
+                } else
+                {
+                     label1 = new Label
+                    {
+                        Content = c[c.Length - 1],
+                        Foreground = Brushes.Black
+                    };
+                     label2 = new Label
+                    {
+                        Content = c.Substring(0, c.Length - 1),
+                        Foreground = Brushes.Black
+                    };
+                }
+                stackPanel.Children.Add(label1);
+                stackPanel.Children.Add(label2);
+                border.Child = stackPanel;
+                lab4Table.Children.Add(border);
+
+            }
+
+
+
+            StackPanel lab4Hands = (StackPanel)FindName("lab4Hands");
+            lab4Hands.Children.Clear();
+
+            foreach (var hand in cards)
+            {
+                if (hand.Count != 2)
+                {
+                    break;
+                }
+                Border borderHand = new Border
+                {
+                    Width = 90,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    Background = Brushes.LightGray,
+                    BorderThickness = new Thickness(3),
+                    BorderBrush = Brushes.Black
+                };
+                StackPanel stackPanelCard = new StackPanel
+                {
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    Orientation = Orientation.Horizontal
+                };
+                foreach (var c in hand)
+                {
+
+
+                    Border border = new Border
+                    {
+                        Width = 40,
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                        Background = Brushes.LightGray,
+                        BorderThickness = new Thickness(1),
+                        BorderBrush = Brushes.Black
+                    };
+
+                    StackPanel stackPanel = new StackPanel
+                    {
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                        Orientation = Orientation.Vertical
+                    };
+
+                    Label label1 = new Label();
+                    Label label2 = new Label();
+                    if (c[c.Length - 1] == '♥' || c[c.Length - 1] == '♦')
+                    {
+                        label1 = new Label
+                        {
+                            Content = c[c.Length - 1],
+                            Foreground = Brushes.Red
+                        };
+                        label2 = new Label
+                        {
+                            Content = c.Substring(0, c.Length - 1),
+                            Foreground = Brushes.Red
+                        };
+                    }
+                    else
+                    {
+                        label1 = new Label
+                        {
+                            Content = c[c.Length - 1],
+                            Foreground = Brushes.Black
+                        };
+                        label2 = new Label
+                        {
+                            Content = c.Substring(0, c.Length - 1),
+                            Foreground = Brushes.Black
+                        };
+                    }
+                    stackPanel.Children.Add(label1);
+                    stackPanel.Children.Add(label2);
+                    border.Child = stackPanel;
+
+                    stackPanelCard.Children.Add(border);
+
+                }
+                borderHand.Child = stackPanelCard;
+                lab4Hands.Children.Add(borderHand);
+            }
 
         }
-
 
         private void lab1Start(object sender, RoutedEventArgs e)
         {
