@@ -84,7 +84,7 @@ namespace zi_labs
             }
             Console.Write("\n");
 
-            int w = 0;
+            int w = 2;
             List<BigInteger> deckKeys = new List<BigInteger>();
             Console.Write("Список индексов: ");
             foreach (string c in CardsDeck)
