@@ -31,6 +31,7 @@ namespace zi_labs
         public MainWindow()
         {
             InitializeComponent();
+            lab5s.ClosedDataGen();
             //защита 1 лабы
             /*            Console.WriteLine("Функция быстрого возведения числа в степень по модулю:");
                         Random rnd = new Random();

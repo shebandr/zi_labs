@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Numerics;
+using System.Windows.Navigation;
 
 
 namespace zi_labs
@@ -25,7 +26,7 @@ namespace zi_labs
             BigInteger range = max - min;
             byte[] buffer = new byte[sizeof(ulong)];
             rnd.NextBytes(buffer);
-            BigInteger randomValue = BitConverter.ToUInt64(buffer, 0);
+            BigInteger randomValue = new BigInteger(buffer);
 
             return (randomValue % range) + min;
         }
@@ -183,6 +184,16 @@ namespace zi_labs
             }
 
             return null;
+        }
+
+        public static BigInteger PowBigInteger(BigInteger a, BigInteger p)
+        {
+            BigInteger result = a;
+            for(BigInteger i = 1; i<p; i++)
+            {
+                result = result * a;
+            }
+            return result;
         }
 
     }
