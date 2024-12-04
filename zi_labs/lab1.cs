@@ -15,16 +15,16 @@ namespace zi_labs
     {
         public lab1() { }
 
-        public static BigInteger GenerateRandomBigInteger(BigInteger min, BigInteger max) // этот костыль не может генерировать числа больше 10^18
+        public static BigInteger GenerateRandomBigInteger(BigInteger min, BigInteger max, int size = 8) // 
         {
             Random rnd = new Random(Guid.NewGuid().GetHashCode());
             if (min >= max)
             {
-                throw new ArgumentException("Минимальное значение должно быть меньше максимального.");
+                throw new ArgumentException("Минимальное значение должно быть меньше максимального." + min + " > " + max);
             }
 
             BigInteger range = max - min;
-            byte[] buffer = new byte[sizeof(ulong)];
+            byte[] buffer = new byte[size];
             rnd.NextBytes(buffer);
             BigInteger randomValue = new BigInteger(buffer);
 

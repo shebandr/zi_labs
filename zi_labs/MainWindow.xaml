@@ -12,6 +12,7 @@
             <Button Click="lab2Start">лаба 2</Button>
             <Button Click="lab3Start">лаба 3</Button>
             <Button Click="lab4Start">лаба 4</Button>
+            <Button Click="lab5Start">лаба 5</Button>
         </StackPanel>
     <Grid Height="0" x:Name="lab1Grid">
         <Grid.ColumnDefinitions>
@@ -137,7 +138,7 @@
             </Button>
         </Grid>
 
-        <Grid x:Name="lab4Grid">
+        <Grid x:Name="lab4Grid" Height="0">
             <StackPanel Orientation="Vertical">
                 <StackPanel Orientation="Horizontal">
                     <Button x:Name="lab4CalcName" Click="lab4Calc">Сыграем в гвинт?</Button>
@@ -153,6 +154,34 @@
         </Grid>
 
 
+
+        <Grid x:Name="lab5Grid">
+            <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Horizontal">
+
+                    <Button x:Name="lab5CalcButton" Click="lab5Calc">Проголосовать</Button>
+                    <TextBox x:Name="lab5Name" Width="100" Height="30"></TextBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <RadioButton x:Name="Vote1Option" Content="Да" GroupName="VoteRadio" IsChecked="True"></RadioButton>
+                    <RadioButton x:Name="Vote2Option" Content="Нет" GroupName="VoteRadio"></RadioButton>
+                    <RadioButton x:Name="Vote3Option" Content="Воздержался" GroupName="VoteRadio"></RadioButton>
+                </StackPanel>
+                <Label x:Name="lab5ErrorLabel" Height="30"></Label>
+                <StackPanel Orientation="Horizontal">
+                    <Label Width="100">Да</Label>
+                    <Label Width="100">Нет</Label>
+                    <Label Width="100">Воздержался</Label>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Width="100" x:Name="voteResult1Label"></Label>
+                    <Label Width="100" x:Name="voteResult2Label"></Label>
+                    <Label Width="100" x:Name="voteResult3Label"></Label>
+                </StackPanel>
+
+            </StackPanel>
+
+        </Grid>
 
     </StackPanel>
 </Window>

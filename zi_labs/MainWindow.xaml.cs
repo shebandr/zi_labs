@@ -28,88 +28,55 @@ namespace zi_labs
         private string lab2FilePath;
         private List<BigInteger> currentSign;
         private BigInteger currentSignBigInteger;
-        public MainWindow()
+        private lab5s lab5S = new lab5s();
+		public MainWindow()
         {
             InitializeComponent();
-            lab5s.ClosedDataGen();
-            //защита 1 лабы
-            /*            Console.WriteLine("Функция быстрого возведения числа в степень по модулю:");
-                        Random rnd = new Random();
-                        ulong p = lab1.generate_prime(100000000, 1000000000);
-                        ulong a = (ulong)rnd.Next(10000, 100000);
-                        ulong x = (ulong)rnd.Next(0, (int)p);
+		}
 
-                        ulong y = lab1.pow_module(a, x, p);
-                        Console.WriteLine("a = " + a + " x = " + x + " p = " + p + "  Ответ: " + y);
+		private void lab5Calc(object sender, RoutedEventArgs e)
+		{
 
-                        var X = lab1.giant_baby_step(a, p, y);
-                        Console.WriteLine(" X = " + X);
-
-                        if(X != x)
-                        {
-                            ulong Y = lab1.pow_module(a, (ulong)X, p);
-                            Console.WriteLine("Новое решение: " + Y);
-                        }
-
-                        ulong prime1 = lab1.generate_prime(1000000, 1000000000);
-                        System.Threading.Thread.Sleep(50);
-                        ulong prime2 = lab1.generate_prime(1000000, 1000000000);
-                        System.Threading.Thread.Sleep(50);
-                        ulong prime3 = lab1.generate_prime(1000000, 1000000000) + 1;
-                        System.Threading.Thread.Sleep(50);
-                        ulong prime4 = lab1.generate_prime(1000000, 1000000000) + 1;
-                        System.Threading.Thread.Sleep(50);
-                        List<ulong> primelist1 = lab1.gcd_mod(prime1, prime2);
-                        List<ulong> primelist2 = lab1.gcd_mod(prime3, prime4);
-                        Console.WriteLine("Евклид:");
-                        Console.WriteLine("простые числа: " + primelist1[0]);
-                        Console.WriteLine("четные числа: " + primelist2[0]);*/
-
-            //подготовка второй лабы
-            /*            Console.WriteLine("Проверка Вернама: ");
-                        byte[] array1 = { 0x55, 0x33, 0xAA, 0x00, 0x01, 0x02, 0xFF };
-                        byte[] array2 = lab2.VernamEncode(array1);
-                        byte[] array3 = lab2.VernamDecode(array2);
-                        for( int i = 0; i < array1.Length; i++ )
-                        {
-                            Console.WriteLine(array1[i] + " " + array3[i]);
-                        }
+			lab5c lab5C = new lab5c(lab5S, lab5Name.Text);
+			if (Vote1Option.IsChecked == true)
+			{
+				lab5SetError(lab5C.Vote(lab5s.VoteOption.v1));
+			}
+			if (Vote2Option.IsChecked == true)
+			{
+				lab5SetError(lab5C.Vote(lab5s.VoteOption.v2));
+			}
+			if (Vote3Option.IsChecked == true)
+			{
+				lab5SetError(lab5C.Vote(lab5s.VoteOption.v3));
+			}
 
 
 
+            List<int> VoteResult = lab5S.VotingResults();
+			voteResult1Label.Content = VoteResult[0];
+			voteResult2Label.Content = VoteResult[1];
+			voteResult3Label.Content = VoteResult[2];
+		}
 
-                        Console.WriteLine("Проверка RSA: ");
-                        BigInteger[] array5 = lab2.RSAEncode(array1);
-                        array3 = lab2.RSADecode(array5);
-                        for (int i = 0; i < array1.Length; i++)
-                        {
-                            Console.WriteLine(array1[i] + " " + array5[i] +  " " + array3[i]);
-                        }
+		private void lab5SetError(int data)
+        {
+            switch(data)
+			{
+				case 0:
+					lab5ErrorLabel.Content = "Бюллетень принят";
+					return;
+				case 1:
+					lab5ErrorLabel.Content = "Бюллетень не принят";
+					return;
+				case 2:
+					lab5ErrorLabel.Content = "Вы уже проголосовали";
+					return;
 
-                        Console.WriteLine("Проверка степени: " + lab1.pow_module(85, 82056381197643673, 471863054612645153));*/
-
-            /*            Console.WriteLine("Проверка Эл Гамала: ");
-                        byte[] array1 = { 0x55, 0x33, 0xAA, 0x00, 0x01, 0x02, 0xFF };
-                        BigInteger[] array2 = lab2.ElGamalEncode(array1);
-                        byte[] array3 = lab2.ElGamalDecode(array2);
-                        for (int i = 0; i < array1.Length; i++)
-                        {
-                            Console.WriteLine(array1[i] + "  " + array2[i] + " " + array3[i]);
-                        }*/
-
-
-            /*            Console.WriteLine("Проверка Шамира: ");
-                        byte[] array1 = { 0x55, 0x33, 0xAA, 0x00, 0x01, 0x02, 0xFF };
-                        BigInteger[] array2 = lab2.ShamirEncode(array1);
-                        byte[] array3 = lab2.ShamirDecode(array2);
-                        for (int i = 0; i < array1.Length; i++)
-                        {
-                            Console.WriteLine(array1[i] + "  " + array2[i] + " " + array3[i]);
-                        }*/
-           
+			}
         }
-        
-        private void lab4Calc(object sender, RoutedEventArgs e)
+
+		private void lab4Calc(object sender, RoutedEventArgs e)
         {
             int playerNum = Int32.Parse( lab4PlayersNum.Text);
             List<List<string>> cards = lab4.MentalPoker(playerNum);
@@ -270,35 +237,46 @@ namespace zi_labs
             lab1Grid.Height = 800;
             lab2Grid.Height = 0;
             lab3Grid.Height = 0;
-            lab4Grid.Height = 0;
+			lab4Grid.Height = 0;
+			lab5Grid.Height = 0;
 
-        }
+		}
         private void lab2Start(object sender, RoutedEventArgs e)
         {
             lab1Grid.Height = 0;
             lab2Grid.Height = 800;
             lab3Grid.Height = 0;
             lab4Grid.Height = 0;
+			lab5Grid.Height = 0;
 
-        }
+		}
         private void lab3Start(object sender, RoutedEventArgs e)
         {
             lab1Grid.Height = 0;
             lab2Grid.Height = 0;
             lab3Grid.Height = 800;
             lab4Grid.Height = 0;
+			lab5Grid.Height = 0;
 
-        }
+		}
         private void lab4Start(object sender, RoutedEventArgs e)
         {
             lab1Grid.Height = 0;
             lab2Grid.Height = 0;
             lab3Grid.Height = 0;
-            lab4Grid.Height = 800;
+			lab4Grid.Height = 800;
+			lab5Grid.Height = 0;
 
         }
-
-        private void fileOpen(object sender, RoutedEventArgs e)
+		private void lab5Start(object sender, RoutedEventArgs e)
+		{
+			lab1Grid.Height = 0;
+			lab2Grid.Height = 0;
+			lab3Grid.Height = 0;
+			lab4Grid.Height = 0;
+			lab5Grid.Height = 800;
+		}
+		private void fileOpen(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             
@@ -589,5 +567,11 @@ namespace zi_labs
 
         }
 
-    }
+		private void Button_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
+
+
+	}
 }
